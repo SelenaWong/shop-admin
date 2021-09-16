@@ -14,7 +14,7 @@ const request = axios.create({
 // 由于我们的后端又包装了一层数据data, 导致我们访问数据比较麻烦,所以我们自己封装了一个request
 
 // 请求拦截器
-axios.interceptors.request.use(function (config) {
+request.interceptors.request.use(function (config) {
   // 统一设置用户身份token
   const user = store.state.user
   if (user && user.token) {
@@ -28,7 +28,7 @@ axios.interceptors.request.use(function (config) {
 // 控制处理登录过期的锁
 let isRefreshing = false
 // 响应拦截器
-axios.interceptors.response.use(function (response) {
+request.interceptors.response.use(function (response) {
   // 统一处理接口响应错误，比如token过期无效，服务端异常等
   // 自定义状态码处理
   // if (response.data.status && response.data.status !== 200) {

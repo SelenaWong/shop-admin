@@ -32,11 +32,11 @@ const handleLogout = async () => {
   }).then(async () => {
     // 确认发出退出请求
     await logout()
+    store.commit('setUser', null)
     // 跳转到登录页
     router.push({
       name: 'login'
     })
-    store.commit('setUser', null)
     ElMessage({
       type: 'success',
       message: '退出成功!'
