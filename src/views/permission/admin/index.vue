@@ -1,12 +1,180 @@
 <template>
-  <h1>订单列表</h1>
+  <page-container>
+    <app-card>
+      <template #header>
+        数据筛选
+      </template>
+      <el-form
+        :inline="true"
+        :ref="form"
+        :model="listParams"
+        :disabled="listLoading"
+        class="demo-form-inline"
+      >
+        <el-form-item label="状态">
+          <el-select
+            v-model="listParams.status"
+            placeholder="请选择"
+            clearable
+          >
+            <el-option
+              label="全部"
+              value=""
+            />
+            <el-option
+              label="显示"
+              :value="1"
+            />
+            <el-option
+              label="不显示"
+              :value="0"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="管理员名称">
+          <el-input
+            v-model="listParams.name"
+            clearable
+            placeholder="请输入身份昵称"
+          />
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            type="primary"
+            native-type="submit"
+            @click="handleQuery"
+          >
+            查询
+          </el-button>
+        </el-form-item>
+      </el-form>
+    </app-card>
+    <app-card>
+      <template #header>
+        <el-button
+          type="primary"
+        >
+          添加管理员
+        </el-button>
+      </template>
+      <el-table
+        :data="list"
+        stripe
+        style="width: 100%"
+      >
+        <el-table-column
+          prop="id"
+          label="ID"
+        />
+        <el-table-column
+          prop="real_name"
+          label="姓名"
+        />
+        <el-table-column
+          prop="account"
+          label="账号"
+        />
+        <el-table-column
+          prop="roles"
+          label="身份"
+        >
+          <template #default="scope">
+            <el-space wrap>
+              <el-tag
+                class="role-tag"
+                v-for="(item) in scope.row.roles"
+                :key="item"
+              >
+                {{ item }}
+              </el-tag>
+            </el-space>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="last_ip"
+          label="最后一次登录IP"
+        />
+        <el-table-column label="状态">
+          <template #default="scope">
+            <el-switch
+              v-model="scope.row.status"
+              active-color="#13ce66"
+              inactive-color="#ff4949"
+              :active-value="1"
+              :inactive-value="0"
+              :loading="scope.row.statusLoading"
+              @change="handleStatusChange(scope.row)"
+            />
+          </template>
+        </el-table-column>
+        <el-table-column
+          label="操作"
+        >
+          <template #default="scope">
+            <el-button
+              @click="handleUpdate(scope.row.id)"
+              type="text"
+              size="small"
+            >
+              编辑
+            </el-button>
+            <el-popconfirm
+              title="确认删除吗？"
+              @confirm="handleDelete(scope.row.id)"
+            >
+              <template #reference>
+                <el-button type="text">
+                  删除
+                </el-button>
+              </template>
+            </el-popconfirm>
+          </template>
+        </el-table-column>
+      </el-table>
+    </app-card>
+  </page-container>
 </template>
 
 <script lang="ts" setup>
-</script>
+import { ref, reactive, onMounted } from 'vue'
+import type { IElForm } from '@/types/element-plus'
+import { getAdmins } from '@/api/admin'
+import type { IListParams, Admin } from '@/api/types/admin'
+const form = ref<IElForm | null>()
+const list = ref<Admin>([])
+const listLoading = ref(false)
+// const listCount = ref(0)
+const listParams = reactive({
+  page: 1,
+  limit: 10,
+  name: '',
+  roles: '',
+  status: '' as IListParams['status']
+  // IListParams中的status是联合类型，而status: ''这里是string类型。需要在此进行类型转换
+})
+const handleStatusChange = (id: number) => {
 
-    <style lang="scss" scoped>
-    h1 {
-      color: $color;
-    }
-    </style>
+}
+const handleUpdate = (id:number) => {
+
+}
+const handleDelete = (id:number) => {
+
+}
+const handleQuery = () => {
+  loadList()
+}
+onMounted(() => {
+  loadList()
+})
+const loadList = async () => {
+  const data = await getAdmins(listParams)
+  list.value = data.list
+}
+
+</script>
+<style lang="scss" scoped>
+  h1 {
+    color: $color;
+  }
+</style>
