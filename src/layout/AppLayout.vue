@@ -19,6 +19,11 @@ import AppMenu from './AppMenu/index.vue'
 import AppHeader from './AppHeader/index.vue'
 </script>
 <style lang="scss" scoped>
+.el-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
 .el-header,
   .el-footer {
     background-color: #B3C0D1;

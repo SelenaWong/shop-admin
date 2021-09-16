@@ -71,11 +71,10 @@
 <script lang="ts" setup>
 import { onMounted, reactive, ref } from 'vue'
 import { getCaptcha, login } from '@/api/common'
-import { ElForm } from 'element-plus'
-import { useRoute, useRouter } from 'vue-router'
-import type { IElForm, IFormItemRule } from '@/types/element-plus'
-import { setItem } from '@/utils/storage'
-import { USER } from '@/utils/constants'
+import { ElForm, ElMessage } from 'element-plus'
+import { useRouter, useRoute } from 'vue-router'
+import type { IElForm, IFormRule } from '@/types/element-plus'
+import { store } from '@/store'
 // import type { FormItemRule } from 'element-plus/packages/components/form/src/form.type'
 const router = useRouter()
 const route = useRoute()
@@ -100,7 +99,7 @@ const loading = ref(false)
 //     { required: true, message: '请输入验证码', trigger: 'change' }
 //   ]
 // })
-const rules = ref < IFormItemRule >({
+const rules = ref < IFormRule >({
   account: [
     { required: true, message: '请输入账号', trigger: 'change' }
   ],
@@ -121,11 +120,16 @@ const handleSubmit = async () => {
   // 2. 表单验证通过,显示loading
   loading.value = true
   // 3. 请求提交
-  const loginData = await login(user).finally(() => {
+  const loginData = await login(user).catch(() => {
+    loadCaptchaData()
+  }).finally(() => {
     loading.value = false
   })
+  if (!loginData) return
+
+  ElMessage.success('登录成功')
   // 4. 处理响应
-  setItem(USER, {
+  store.commit('setUser', {
     ...loginData.user_info,
     token: loginData.token
   })
@@ -140,7 +144,7 @@ const handleSubmit = async () => {
   }
   // router.replace的类型
   // export declare type RouteLocationRaw = string | (RouteQueryAndHash & LocationAsPath & RouteLocationOptions) | (RouteQueryAndHash & LocationAsRelativeRaw & RouteLocationOptions);
-  router.replace(redirect)
+  router.replace('/')
 }
 
 onMounted(() => {
