@@ -61,6 +61,7 @@
         :data="list"
         stripe
         style="width: 100%"
+        v-loading="listLoading"
       >
         <el-table-column
           prop="id"
@@ -131,6 +132,13 @@
           </template>
         </el-table-column>
       </el-table>
+      <app-pagination
+        v-model:page="listParams.page"
+        v-model:limit="listParams.limit"
+        :list-count="listCount"
+        :load-list="loadList"
+        :disabled="listLoading"
+      />
     </app-card>
   </page-container>
 </template>
@@ -138,12 +146,13 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 import type { IElForm } from '@/types/element-plus'
-import { getAdmins } from '@/api/admin'
+import { getAdmins, deleteAdmin, updateAdminStatus } from '@/api/admin'
 import type { IListParams, Admin } from '@/api/types/admin'
+import { ElMessage } from 'element-plus'
 const form = ref<IElForm | null>()
-const list = ref<Admin>([])
+const list = ref<Admin[]>([])
 const listLoading = ref(false)
-// const listCount = ref(0)
+const listCount = ref(0)
 const listParams = reactive({
   page: 1,
   limit: 10,
@@ -152,14 +161,20 @@ const listParams = reactive({
   status: '' as IListParams['status']
   // IListParams中的status是联合类型，而status: ''这里是string类型。需要在此进行类型转换
 })
-const handleStatusChange = (id: number) => {
-
+const handleStatusChange = async (item: Admin) => {
+  item.statusLoading = true
+  await updateAdminStatus(item.id, item.status).finally(() => {
+    item.statusLoading = false
+  }) // 此时的status是改变之后的status
+  ElMessage.success(`${item.status === 1 ? '启用' : '禁用'}成功`)
 }
 const handleUpdate = (id:number) => {
 
 }
-const handleDelete = (id:number) => {
-
+const handleDelete = async (id:number) => {
+  await deleteAdmin(id)
+  ElMessage.success('删除成功')
+  loadList()
 }
 const handleQuery = () => {
   loadList()
@@ -168,8 +183,15 @@ onMounted(() => {
   loadList()
 })
 const loadList = async () => {
-  const data = await getAdmins(listParams)
+  listLoading.value = true
+  const data = await getAdmins(listParams).finally(() => {
+    listLoading.value = false
+  })
+  data.list.forEach(item => {
+    item.statusLoading = false // 控制切换状态的效果
+  })
   list.value = data.list
+  listCount.value = data.count
 }
 
 </script>

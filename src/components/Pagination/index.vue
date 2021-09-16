@@ -14,6 +14,7 @@
 <script lang="ts" setup>
 import type { PropType } from '@vue/runtime-core'
 
+// js方式声明定义Props类型
 const props = defineProps({
   page: { // 页码
     type: Number,
@@ -33,6 +34,23 @@ const props = defineProps({
   }
 })
 
+// ts方式定义Props类型
+// interface PropsType {
+//   page: number
+//   limit: number
+//   listCount:number
+//   loadList: ()=> void
+// }
+// // 没有带默认值
+// // const props = defineProps<PropsType>()
+// const props = withDefaults(defineProps<PropsType>(), {
+//   page: 1,
+//   limit: 10,
+//   listCount: 0,
+//   loadList: () => {}
+// })
+
+// const emit = defineEmits(['update:page', 'update:limit'])
   interface EmitsType {
     (e: 'update:page', page: number, a: string): void
     (e: 'update:limit', limit: number): void
