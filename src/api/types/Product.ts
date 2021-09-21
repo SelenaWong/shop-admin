@@ -119,17 +119,3 @@ export type ProductAttr = Record<string, any> & {
     brokerage: number
     brokerage_two: number
   }
-
-// export interface ProductAttr {
-//   bar_code: string
-//   brokerage: number
-//   brokerage_two: number
-//   cost: number
-//   ot_price: number
-//   pic: string
-//   price: number
-//   stock: number
-//   vip_price: number
-//   volume: number
-//   weight: number
-// }
