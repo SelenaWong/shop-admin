@@ -6,7 +6,7 @@
       </template>
       <el-form
         :inline="true"
-        :ref="form"
+        ref="form"
         :model="listParams"
         :disabled="listLoading"
         class="demo-form-inline"

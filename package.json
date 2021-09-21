@@ -3,10 +3,11 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc --noEmit && vite build",
+    "build": "npm run tsc && vite build",
     "serve": "vite preview",
     "lint": "eslint ./src/**/*.{vue,ts,tsx} --fix",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "tsc": "vue-tsc -noEmit"
   },
   "dependencies": {
     "axios": "^0.21.4",
@@ -49,8 +50,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,vue,ts,tsx}": [
-      "npm run lint",
-      "git add"
+      "npm run lint"
     ]
   }
 }
