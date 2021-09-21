@@ -15,7 +15,7 @@ export const getAdmins = (params: IListParams) => {
 export const createAdmin = (data: AdminPostData) => {
   return request({
     method: 'POST',
-    url: '/setting/admin',
+    url: '/admin/setting/admin',
     data
   })
 }
@@ -23,7 +23,7 @@ export const createAdmin = (data: AdminPostData) => {
 export const updateAdmin = (id: number, data: AdminPostData) => {
   return request({
     method: 'PUT',
-    url: `/setting/admin/${id}`,
+    url: `/admin/setting/admin/${id}`,
     data
   })
 }
@@ -31,20 +31,20 @@ export const updateAdmin = (id: number, data: AdminPostData) => {
 export const deleteAdmin = (id: number) => {
   return request({
     method: 'DELETE',
-    url: `/setting/admin/${id}`
+    url: `/admin/setting/admin/${id}`
   })
 }
 
 export const updateAdminStatus = (id: number, status: number) => {
   return request({
     method: 'PUT',
-    url: `/setting/set_status/${id}/${status}`
+    url: `/admin/setting/set_status/${id}/${status}`
   })
 }
 export const getRoles = () => {
   return request<IFormData>({
     method: 'GET',
-    url: '/setting/admin/create'
+    url: '/admin/setting/admin/create'
   }).then(data => {
     const roles = data.rules.find(item => item.field === 'roles')
     if (roles && roles.options) {
@@ -57,19 +57,20 @@ export const getRoles = () => {
 export const getAdmin = (id: number) => {
   return request<IFormData>({
     method: 'GET',
-    url: `/setting/admin/${id}/edit`
+    url: `/admin/setting/admin/${id}/edit`
   }).then(data => {
     const obj: Record<string, any> = {}
     data.rules.forEach((item:any) => {
       obj[item.field] = item.value
     })
-    return obj as {
-        account: string
-        pwd: string
-        conf_pwd: string
-        real_name: string
-        roles: string[]
-        status: 0 | 1
-      }
+    // return obj as {
+    //     account: string
+    //     pwd: string
+    //     conf_pwd: string
+    //     real_name: string
+    //     roles: number[]
+    //     status: 0 | 1
+    //   }
+    return obj as AdminPostData
   })
 }

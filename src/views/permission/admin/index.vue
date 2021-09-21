@@ -53,6 +53,7 @@
       <template #header>
         <el-button
           type="primary"
+          @click="formVisible = true"
         >
           添加管理员
         </el-button>
@@ -110,6 +111,8 @@
         </el-table-column>
         <el-table-column
           label="操作"
+          fixed="right"
+          min-width="100"
         >
           <template #default="scope">
             <el-button
@@ -141,6 +144,11 @@
       />
     </app-card>
   </page-container>
+  <admin-form
+    v-model="formVisible"
+    v-model:admin-id="adminId"
+    @success="handleFormSuccess"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -149,6 +157,8 @@ import type { IElForm } from '@/types/element-plus'
 import { getAdmins, deleteAdmin, updateAdminStatus } from '@/api/admin'
 import type { IListParams, Admin } from '@/api/types/admin'
 import { ElMessage } from 'element-plus'
+import AdminForm from './AdminForm.vue'
+
 const form = ref<IElForm | null>()
 const list = ref<Admin[]>([])
 const listLoading = ref(false)
@@ -161,6 +171,9 @@ const listParams = reactive({
   status: '' as IListParams['status']
   // IListParams中的status是联合类型，而status: ''这里是string类型。需要在此进行类型转换
 })
+
+const formVisible = ref(false)
+const adminId = ref<number| null>(null)
 const handleStatusChange = async (item: Admin) => {
   item.statusLoading = true
   await updateAdminStatus(item.id, item.status).finally(() => {
@@ -169,7 +182,8 @@ const handleStatusChange = async (item: Admin) => {
   ElMessage.success(`${item.status === 1 ? '启用' : '禁用'}成功`)
 }
 const handleUpdate = (id:number) => {
-
+  adminId.value = id
+  formVisible.value = true
 }
 const handleDelete = async (id:number) => {
   await deleteAdmin(id)
@@ -194,6 +208,11 @@ const loadList = async () => {
   listCount.value = data.count
 }
 
+const handleFormSuccess = () => {
+  formVisible.value = false
+  listParams.page = 1
+  loadList()
+}
 </script>
 <style lang="scss" scoped>
   h1 {
