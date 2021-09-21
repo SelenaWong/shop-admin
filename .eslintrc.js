@@ -23,6 +23,7 @@ module.exports = {
     '@typescript-eslint'
   ],
   rules: {
+    'vue/no-mutating-props': 'off'
   },
   overrides: [
     {

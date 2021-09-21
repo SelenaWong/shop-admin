@@ -1,9 +1,9 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
 import AppLayout from '@/layout/AppLayout.vue'
-import productRoutes from './modules/product'
-import orderRoutes from './modules/order'
-import permissionRoutes from './modules/permission'
-import mediaRoutes from './modules/media'
+import productRouter from './modules/product'
+import orderRouter from './modules/order'
+import permissionRouter from './modules/permission'
+import mediaRouter from './modules/media'
 import nprogress from 'nprogress'
 import 'nprogress/nprogress.css'
 import { store } from '@/store'
@@ -24,10 +24,10 @@ const routes: RouteRecordRaw[] = [ // 路由规则
           title: '首页'
         }
       },
-      ...productRoutes,
-      ...orderRoutes,
-      ...permissionRoutes,
-      mediaRoutes
+      productRouter,
+      orderRouter,
+      permissionRouter,
+      mediaRouter
     ]
   },
   {
