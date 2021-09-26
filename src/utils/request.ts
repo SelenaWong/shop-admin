@@ -5,7 +5,8 @@ import router from '@/router/'
 // 如果直接只使用import router from '@/router'， 引用时可能会导致router.d.ts与router/index.ts混淆
 
 const request = axios.create({
-  // baseURL: import.meta.env.VITE_API_BASEURL
+  // @ts-ignore
+  baseURL: import.meta.env.VITE_API_BASEURL
   // baseURL: '/admin' //可能存在多个域名，因此不建议在这里配置
 }) // 相当于clone对象
 
